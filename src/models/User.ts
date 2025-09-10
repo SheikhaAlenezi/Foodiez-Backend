@@ -2,13 +2,8 @@ import mongoose, { HydratedDocument, InferSchemaType } from "mongoose";
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
+  email: { type: String, unique: true, required: true },
   password: { type: String, required: true, minlength: 4, select: false },
-  urls: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Url",
-    },
-  ],
 });
 
 export type UserAttrs = InferSchemaType<typeof UserSchema>;
