@@ -17,14 +17,16 @@ export const signup: RequestHandler = async (
         message: "username or password  or email missing",
       });
     }
-    const usernameExists = await User.findOne({
-      $or: [{ username }, { email }],
-    }).select("password");
+    const usernameExists = await User.findOne({ username }).select("password");
     if (usernameExists) {
       return next({
         status: 400,
-        message: "username or email already exists",
+        message: "username already exists",
       });
+    }
+    const emaiExists = await User.findOne({ email }).select("password");
+    if (emaiExists) {
+      return next({ status: 400, message: "email already exists" });
     }
 
     const hashedPassword = await hashPassword(password);
@@ -34,16 +36,12 @@ export const signup: RequestHandler = async (
       password: hashedPassword,
     });
     const token = generateToken(newUser.username, newUser.id);
-    console.log("New user ID:", newUser.id);
+    console.log("username", newUser.username);
+
     console.log("generated token", token);
 
     res.status(201).json({
       token,
-      user: {
-        id: newUser.id,
-        username: newUser.username,
-        email: newUser.email,
-      },
     });
   } catch (err) {
     next(err);
@@ -84,11 +82,6 @@ export const signin = async (
     const token = generateToken(user.username, user.id);
     res.json({
       token,
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-      },
     });
   } catch (err) {
     next(err);

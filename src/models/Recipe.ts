@@ -10,6 +10,12 @@ const RecipeSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
     },
+    ingredient: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Ingredient",
+      },
+    ],
   },
   {
     timestamps: true,

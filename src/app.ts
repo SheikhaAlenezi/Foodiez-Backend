@@ -4,8 +4,8 @@ import notFound from "./middlewares/NotFound";
 import errorHandler from "./middlewares/ErrorHandler";
 import morgan from "morgan";
 import userRouter from "../src/api/users/users.routes";
-import categoryRouter from "./api/users/category/category.routes";
-import recipeRouter from "./api/users/recipe/recipe.routes";
+import categoryRouter from "./api/category/category.routes";
+import recipeRouter from "./api/recipe/recipe.routes";
 
 const app = express();
 const PORT = 8000;
