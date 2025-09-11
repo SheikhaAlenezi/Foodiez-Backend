@@ -6,12 +6,10 @@ const RecipeSchema = new mongoose.Schema(
     instructions: { type: String },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 
-    category: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Category",
-      },
-    ],
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
   },
   {
     timestamps: true,

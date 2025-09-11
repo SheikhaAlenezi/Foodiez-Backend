@@ -71,7 +71,7 @@ export const deleteRecipe = async (
   try {
     const deleted = await Recipe.findByIdAndDelete(req.params.id);
     if (!deleted) return next({ message: "recipe not found", status: 404 });
-    next({ message: "recipe deleted", status: 200 });
+    res.status(200).json({ message: "recipe deleted" });
   } catch (error) {
     next({ message: "error deleting recipe ", status: 500 });
   }
