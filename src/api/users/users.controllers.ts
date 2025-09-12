@@ -10,21 +10,27 @@ export const signup: RequestHandler = async (
   next: NextFunction
 ) => {
   try {
-    const { username, password, email } = req.body;
-    if (!username || !password || !email) {
+    const { username, password, email, confirmPassword } = req.body;
+    if (!username || !password || !email || !confirmPassword) {
       return next({
         status: 400,
-        message: "username or password  or email missing",
+        message: "all feild required",
       });
     }
-    const usernameExists = await User.findOne({ username }).select("password");
+    if (password !== confirmPassword) {
+      return next({
+        status: 400,
+        message: "password not matched with confirm password",
+      });
+    }
+    const usernameExists = await User.findOne({ username });
     if (usernameExists) {
       return next({
         status: 400,
         message: "username already exists",
       });
     }
-    const emaiExists = await User.findOne({ email }).select("password");
+    const emaiExists = await User.findOne({ email });
     if (emaiExists) {
       return next({ status: 400, message: "email already exists" });
     }
