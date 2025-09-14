@@ -38,10 +38,9 @@ export const authenticate = async (
       });
     }
 
-    req.user = user;
+    (req as any).user = user;
 
     console.log(decodedToken);
-
     next();
   } catch (err) {
     console.log(err);

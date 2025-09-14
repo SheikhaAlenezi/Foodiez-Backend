@@ -7,16 +7,20 @@ export const createRecipe = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { title, instructions, categoryId, userId } = req.body;
+  const { title, instructions, category: categoryId } = req.body;
 
   try {
     const recipe = new Recipe({
       title,
       instructions,
       category: categoryId,
-      user: userId,
     });
     await recipe.save();
+    await Category.findByIdAndUpdate(
+      categoryId,
+      { $push: { recipe: recipe._id } },
+      { new: true }
+    );
 
     res.status(201).json({ message: "recipe created", recipe });
   } catch (err) {

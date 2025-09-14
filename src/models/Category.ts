@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 
 const CategorySchema = new mongoose.Schema(
   {
-    name: { type: String, unique: true },
+    name: { type: String, required: true, unique: true, trim: true },
+    description: { type: String },
+    color: { type: String },
+    icon: { type: String },
     recipe: [
       {
         type: mongoose.Schema.Types.ObjectId,

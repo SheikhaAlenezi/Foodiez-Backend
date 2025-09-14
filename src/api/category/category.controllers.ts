@@ -7,7 +7,16 @@ export const createList = async (
   next: NextFunction
 ) => {
   try {
-    const category = await Category.create({ ...req.body });
+    const { name, description, color, icon } = req.body;
+    if (!name) {
+      return res.status(400).json({ message: "category name is required" });
+    }
+    const existing = await Category.findOne({ name: name.trim() });
+    if (existing) {
+      return res.status(400).json({ message: "Category already exists" });
+    }
+    const category = new Category({ name, description, color, icon });
+    await category.save();
     res.status(201).json(category);
   } catch (err) {
     next(err);
@@ -21,7 +30,7 @@ export const getAllCategory = async (
 ) => {
   try {
     const categories = await Category.find().populate("recipe");
-    res.status(200).json(categories);
+    res.json(categories);
   } catch (err) {
     next(err);
   }
