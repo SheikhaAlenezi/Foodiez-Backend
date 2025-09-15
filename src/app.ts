@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 app.use("/api/users", userRouter);
-app.use("/api/category", categoryRouter);
+app.use("/api/categories", categoryRouter);
 app.use("/api/recipe", recipeRouter);
 
 connectDB();

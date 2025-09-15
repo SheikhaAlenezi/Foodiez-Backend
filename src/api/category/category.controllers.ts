@@ -35,3 +35,20 @@ export const getAllCategory = async (
     next(err);
   }
 };
+
+export const getCategoryRecipes = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const category = await Category.findById(id).populate("recipe");
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+    res.json(category.recipe);
+  } catch (err) {
+    next(err);
+  }
+};
