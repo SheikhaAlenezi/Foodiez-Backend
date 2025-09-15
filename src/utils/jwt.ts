@@ -1,10 +1,11 @@
 import { JWT_SECRET, JWT_EXP } from "../config/database";
 import jwt from "jsonwebtoken";
 
-export const generateToken = (username: string, id: string) => {
+export const generateToken = (username: string, id: string, email: string) => {
   const payload = {
     _id: id,
     username,
+    email,
   };
   const token = jwt.sign(payload, JWT_SECRET, {
     expiresIn: JWT_EXP,
