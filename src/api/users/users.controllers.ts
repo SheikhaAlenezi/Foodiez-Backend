@@ -41,7 +41,7 @@ export const signup: RequestHandler = async (
       email,
       password: hashedPassword,
     });
-    const token = generateToken(newUser.username, newUser.id);
+    const token = generateToken(newUser.username, newUser.id, newUser.email);
     console.log("username", newUser.username);
 
     console.log("generated token", token);
@@ -85,7 +85,7 @@ export const signin = async (
       });
     }
     // genereate token
-    const token = generateToken(user.username, user.id);
+    const token = generateToken(user.username, user.id, user.email);
     res.json({
       token,
     });
@@ -105,4 +105,17 @@ export const getUsers = async (
   } catch (err) {
     next(err);
   }
+};
+
+export const getUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const user = req.user;
+
+  return res.status(200).json({
+    username: user?.username,
+    email: user?.email,
+  });
 };
