@@ -106,3 +106,16 @@ export const getUsers = async (
     next(err);
   }
 };
+
+export const getUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const user = req.user;
+
+  return res.status(200).json({
+    username: user?.username,
+    email: user?.email,
+  });
+};
