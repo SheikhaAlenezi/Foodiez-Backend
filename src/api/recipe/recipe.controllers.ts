@@ -7,7 +7,14 @@ export const createRecipe = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { title, instructions, category: categoryId } = req.body;
+  const {
+    recipeName,
+    instructions,
+    category: categoryId,
+    description,
+    prep,
+    serving,
+  } = req.body;
 
   try {
     const category = await Category.findById(categoryId);
@@ -15,8 +22,11 @@ export const createRecipe = async (
       return res.status(404).json({ message: "category not found" });
     }
     const recipe = new Recipe({
-      title,
+      recipeName,
       instructions,
+      description,
+      prep,
+      serving,
       category: categoryId,
     });
     await recipe.save();
