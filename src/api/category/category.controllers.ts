@@ -47,7 +47,7 @@ export const getRecipesByCategory = async (
     if (!category) {
       return res.status(404).json({ message: "Category not found" });
     }
-    res.setHeader("Cashe-Control", "no-store");
+
     res.json(category.recipe);
   } catch (err) {
     next(err);
