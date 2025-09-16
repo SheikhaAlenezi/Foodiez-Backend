@@ -6,6 +6,7 @@ import morgan from "morgan";
 import userRouter from "../src/api/users/users.routes";
 import categoryRouter from "./api/category/category.routes";
 import recipeRouter from "./api/recipe/recipe.routes";
+import ingredientRouter from "./api/ingredient/ingredient.routes";
 
 const app = express();
 const PORT = 8000;
@@ -16,6 +17,7 @@ app.use(morgan("dev"));
 app.use("/api/users", userRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/recipe", recipeRouter);
+app.use("/api/ingredient", ingredientRouter);
 
 connectDB();
 app.use(notFound);

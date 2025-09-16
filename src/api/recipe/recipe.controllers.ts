@@ -10,17 +10,18 @@ export const createRecipe = async (
   const { title, instructions, category: categoryId } = req.body;
 
   try {
+    const category = await Category.findById(categoryId);
+    if (!category) {
+      return res.status(404).json({ message: "category not found" });
+    }
     const recipe = new Recipe({
       title,
       instructions,
       category: categoryId,
     });
     await recipe.save();
-    await Category.findByIdAndUpdate(
-      categoryId,
-      { $push: { recipe: recipe._id } },
-      { new: true }
-    );
+    category.recipe.push(recipe._id);
+    await category.save();
 
     res.status(201).json({ message: "recipe created", recipe });
   } catch (err) {
@@ -35,8 +36,8 @@ export const getAllRecipe = async (
 ) => {
   try {
     const recipe = await Recipe.find()
-      .populate("user", "username")
-      .populate("category", "name");
+      .populate("user", "username email")
+      .populate("category", "name color icon");
     if (!recipe) return res.status(404).json({ message: "recipe not found" });
     res.status(200).json(recipe);
   } catch (err) {
@@ -75,6 +76,9 @@ export const deleteRecipe = async (
   try {
     const deleted = await Recipe.findByIdAndDelete(req.params.id);
     if (!deleted) return next({ message: "recipe not found", status: 404 });
+    await Category.findByIdAndUpdate(deleted.category, {
+      $pull: { recipe: deleted._id },
+    });
     res.status(200).json({ message: "recipe deleted" });
   } catch (error) {
     next({ message: "error deleting recipe ", status: 500 });

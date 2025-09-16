@@ -35,3 +35,40 @@ export const getAllCategory = async (
     next(err);
   }
 };
+
+export const getRecipesByCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const category = await Category.findById(id).populate("recipe");
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    res.json(category.recipe);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const category = await Category.findByIdAndDelete(id);
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    res.status(200).json({ message: "Category deleted successfully" });
+  } catch (err) {
+    next(err);
+  }
+};
