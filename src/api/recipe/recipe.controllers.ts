@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import Recipe from "../../models/Recipe";
 import Category from "../../models/Category";
+import Ingredient from "../../models/Ingredient";
 
 export const createRecipe = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { title, instructions, category: categoryId } = req.body;
+  const { title, instructions, category: categoryId, ingredients } = req.body;
 
   try {
     const category = await Category.findById(categoryId);
@@ -18,10 +19,17 @@ export const createRecipe = async (
       title,
       instructions,
       category: categoryId,
+      ingredients,
     });
     await recipe.save();
     category.recipe.push(recipe._id);
     await category.save();
+    if (ingredients && ingredients.length > 0) {
+      await Ingredient.updateMany(
+        { _id: { $in: ingredients } },
+        { $push: { recipe: recipe._id } }
+      );
+    }
 
     res.status(201).json({ message: "recipe created", recipe });
   } catch (err) {
@@ -37,7 +45,8 @@ export const getAllRecipe = async (
   try {
     const recipe = await Recipe.find()
       .populate("user", "username email")
-      .populate("category", "name color icon");
+      .populate("category", "name color icon")
+      .populate("ingredient.ingredient", "names ");
     if (!recipe) return res.status(404).json({ message: "recipe not found" });
     res.status(200).json(recipe);
   } catch (err) {

@@ -4,6 +4,9 @@ const RecipeSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     instructions: { type: String },
+    description: { type: String },
+    prep: { type: String },
+    serving: { type: String },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 
     category: {
@@ -12,8 +15,12 @@ const RecipeSchema = new mongoose.Schema(
     },
     ingredient: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Ingredient",
+        ingredient: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Ingredient",
+          required: true,
+        },
+        amount: { type: String },
       },
     ],
   },

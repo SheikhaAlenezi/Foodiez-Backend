@@ -3,14 +3,15 @@ import Ingredient from "../../models/Ingredient";
 
 export const createIngredient = async (req: Request, res: Response) => {
   try {
-    const { names, amount, recipe } = req.body;
+    const { names } = req.body;
+    if (!names) return res.status(400).json({ message: "names is required" });
 
-    const ingredient = new Ingredient({
-      names,
-      amount,
-      recipe,
+    const existing = await Ingredient.findOne({
+      names: names.trim().toLowerCase(),
     });
-
+    if (existing)
+      return res.status(400).json({ message: "Ingredient already exists" });
+    const ingredient = new Ingredient({ names: names.trim().toLowerCase() });
     await ingredient.save();
     res.status(201).json(ingredient);
   } catch (error: any) {
