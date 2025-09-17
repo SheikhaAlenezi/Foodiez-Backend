@@ -8,7 +8,16 @@ export const createRecipe = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { title, instructions, category: categoryId, ingredients } = req.body;
+  const {
+    title,
+    instructions,
+    category: categoryId,
+    ingredients,
+    description,
+    prep,
+    serving,
+    user,
+  } = req.body;
 
   try {
     const category = await Category.findById(categoryId);
@@ -18,6 +27,10 @@ export const createRecipe = async (
     const recipe = new Recipe({
       title,
       instructions,
+      description,
+      prep,
+      serving,
+      user,
       category: categoryId,
       ingredients,
     });
