@@ -72,7 +72,8 @@ export const updateRecipe = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { title, instructions, categoryId } = req.body;
+  const { title, instructions, categoryId, description, prep, serving } =
+    req.body;
   try {
     const updated = await Recipe.findByIdAndUpdate(
       req.params.id,
@@ -80,6 +81,9 @@ export const updateRecipe = async (
         title,
         instructions,
         category: categoryId,
+        description,
+        prep,
+        serving,
       },
       { new: true }
     );
