@@ -44,8 +44,13 @@ export const createRecipe = async (
         { $addToSet: { recipe: recipe._id } }
       );
     }
+    const populatedRecipe = await Recipe.findById(recipe._id)
+      .populate("category", "name color icon")
+      .populate("ingredients.ingredient", "names");
 
-    res.status(201).json({ message: "recipe created", recipe });
+    res
+      .status(201)
+      .json({ message: "recipe created", recipe: populatedRecipe });
   } catch (err) {
     res.status(500).json({ message: "error creating recipe", err });
   }
