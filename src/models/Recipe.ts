@@ -13,7 +13,7 @@ const RecipeSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
     },
-    ingredient: [
+    ingredients: [
       {
         ingredient: {
           type: mongoose.Schema.Types.ObjectId,

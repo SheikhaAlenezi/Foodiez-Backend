@@ -38,9 +38,10 @@ export const createRecipe = async (
     category.recipe.push(recipe._id);
     await category.save();
     if (ingredients && ingredients.length > 0) {
+      const ingredientIds = ingredients.map((i: any) => i.ingredient);
       await Ingredient.updateMany(
-        { _id: { $in: ingredients } },
-        { $push: { recipe: recipe._id } }
+        { _id: { $in: ingredientIds } },
+        { $addToSet: { recipe: recipe._id } }
       );
     }
 
@@ -59,7 +60,7 @@ export const getAllRecipe = async (
     const recipe = await Recipe.find()
       .populate("user", "username email")
       .populate("category", "name color icon")
-      .populate("ingredient.ingredient", "names ");
+      .populate("ingredients.ingredient", "names ");
     if (!recipe) return res.status(404).json({ message: "recipe not found" });
     res.status(200).json(recipe);
   } catch (err) {
@@ -72,7 +73,7 @@ export const updateRecipe = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { title, instructions, categoryId } = req.body;
+  const { title, instructions, categoryId, ingredients } = req.body;
   try {
     const updated = await Recipe.findByIdAndUpdate(
       req.params.id,
@@ -80,6 +81,7 @@ export const updateRecipe = async (
         title,
         instructions,
         category: categoryId,
+        ingredients,
       },
       { new: true }
     );
